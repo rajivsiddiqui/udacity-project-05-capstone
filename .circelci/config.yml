@@ -1,15 +1,16 @@
 version: 2.1
 orbs:
   docker: circleci/docker@1.5.0
-  # Steps
+
+jobs:
+  test:
     steps:
       - run:
-          name: TEST
-          # Add when this will run
+          name: test
           command: |
             echo "TEST"
+            
 workflows:
   default:
     jobs:
-     - TEST:
-      
+     - test:
