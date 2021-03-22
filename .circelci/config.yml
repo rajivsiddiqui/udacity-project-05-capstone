@@ -10,10 +10,7 @@ jobs:
       - checkout
       - run:
           name: Build front-end
-          command: |
-            # Your code here
-            #echo `pwd`
-            ls -lart
+          command: ls -lart
             
 workflows:
   default:
