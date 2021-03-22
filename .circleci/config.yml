@@ -16,4 +16,10 @@ jobs:
 workflows:
   default:
     jobs:
-     - test:
+     - docker/hadolint:
+        dockerfiles: ./Dockerfile
+        ignore-rules: 'DL4005,DL3008'
+     - docker/publish:
+        requires: [docker/hadolint]
+        image: krajeevs/udacityp05_v1
+        tag: latest 
