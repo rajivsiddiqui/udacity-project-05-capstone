@@ -2,14 +2,20 @@ version: 2.1
 orbs:
   docker: circleci/docker@1.5.0
   # Steps
-  
+    steps:
+      - run:
+          name: TEST
+          # Add when this will run
+          command: |
+            echo "TEST"
 workflows:
   default:
     jobs:
+     - TEST:
      - docker/hadolint:
         dockerfiles: ./Dockerfile
         ignore-rules: 'DL4005,DL3008'
      - docker/publish:
         requires: [docker/hadolint]
         image: krajeevs/udacityp05_v1
-        tag: latest
+        tag: latest       
