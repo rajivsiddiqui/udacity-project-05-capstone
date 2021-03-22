@@ -4,11 +4,16 @@ orbs:
 
 jobs:
   test:
+    docker:
+      - image: circleci/node:13.8.0
     steps:
+      - checkout
       - run:
-          name: test
+          name: Build front-end
           command: |
-            echo "TEST"
+            # Your code here
+            #echo `pwd`
+            ls -lart
             
 workflows:
   default:
