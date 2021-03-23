@@ -7,41 +7,6 @@ orbs:
   aws-cli: circleci/aws-cli@1.4.1
   
 jobs:
-  test:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - checkout
-      - run:
-          name: Build front-end
-          command: ls -lart
-  deploy-pods:
-    executor: aws-eks/python3
-    parameters:
-      cluster-name:
-        description: |
-          Name of the EKS cluster
-        type: string
-    steps:
-      - checkout
-      - kubernetes/install
-      - aws-eks/update-kubeconfig-with-authenticator:
-          cluster-name: << parameters.cluster-name >>
-      - run:
-          name: Test cluster
-          command: |
-            kubectl get services
-            kubectl get nodes
-            kubectl get pods
-            kubectl apply -f ./deployment.yaml
-            kubectl apply -f ./service.yaml
-            kubectl get deployment my-frontend
-            kubectl rollout restart deployment/my-frontend
-            sleep 20
-            kubectl get services
-            kubectl get nodes
-            kubectl get pods
-            sleep 20
             
   create-eks-cluster:
     executor: aws-eks/python3
@@ -56,9 +21,9 @@ jobs:
       - aws-eks/install-eksctl
       - aws-cli/setup
       - run:
-          name: Test cluster
+          name: create cluster
           command: |
-            
+            #Only create cluster if not exists  
             mystackcount=`aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE | grep "<< parameters.cluster-name >>" | wc -l`
             if [[ $mystackcount -gt 0 ]]
             then
@@ -67,6 +32,39 @@ jobs:
             echo "Cluster Not Found"
             eksctl create cluster --name << parameters.cluster-name >> --region us-west-2 --node-type m5.large --nodes 2 --nodes-min 2 --nodes-max 4 --managed
             fi
+
+  deploy-pods:
+    executor: aws-eks/python3
+    parameters:
+      cluster-name:
+        description: |
+          Name of the EKS cluster
+        type: string
+    steps:
+      - checkout
+      - kubernetes/install
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: << parameters.cluster-name >>
+      - run:
+          name: deployment
+          command: |
+            # Check the cluster/nodes/pods status
+            kubectl get services
+            kubectl get nodes
+            kubectl get pods
+            
+            # Deployment - rolling deployment 
+            kubectl apply -f ./deployment.yaml
+            kubectl apply -f ./service.yaml
+            kubectl get deployment my-frontend
+            kubectl rollout restart deployment/my-frontend
+            
+            # Check the cluster/nodes/pods status
+            sleep 20
+            kubectl get services
+            kubectl get nodes
+            kubectl get pods
+            sleep 20
             
 workflows:
   default:
@@ -84,24 +82,4 @@ workflows:
      - deploy-pods:
         requires: [create-eks-cluster]
         cluster-name: my-udacity-capstone-demo
-     #- aws-eks/delete-cluster:
-        #requires: [deploy-pods]
-        #cluster-name: my-udacity-capstone-demo
-        
-     #- aws-eks/delete-cluster:
-        #requires: [docker/publish]
-        #cluster-name: my-udacity-capstone-demo
-     #- aws-eks/create-cluster:
-        #requires: [docker/publish]
-        #cluster-name: my-udacity-capstone-demo
-     #- create-eks-cluster:  
-     #- test-cluster:
-        #requires: [docker/publish]
-        #requires: [aws-eks/create-cluster]
-        #cluster-name: my-udacity-capstone-demo
-     #- aws-eks/delete-cluster:
-        #requires: [create-eks-cluster]
-        #requires: [test-cluster]
-        #cluster-name: my-udacity-capstone-demo
-
-        
+    
