@@ -53,6 +53,7 @@ jobs:
     steps:
       - checkout
       - kubernetes/install
+      - aws-eks/install-eksctl
       - aws-cli/setup
       - run:
           name: Test cluster
