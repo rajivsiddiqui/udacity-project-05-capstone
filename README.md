@@ -8,3 +8,11 @@ Following are the steps:
 4. Deployed the Docker image on the pods.
 5. Added load balancer service for the external communication.
 
+Circle CI setup :
+1. Setup following variables :
+   DOCKER_LOGIN
+   DOCKER_PASSWORD
+   AWS_ACCESS_KEY_ID
+   AWS_DEFAULT_REGION
+   AWS_SECRET_ACCESS_KEY
+
