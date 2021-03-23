@@ -57,15 +57,9 @@ jobs:
       - run:
           name: Test cluster
           command: |
-
-            mystackcount=`aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE | grep "<< parameters.cluster-name >>" | wc -l`
-            if [[ $mystackcount -gt 0 ]]
-            then
-            echo "Cluster Found"
-            else
-            echo "Cluster Not Found"
             eksctl create cluster --name << parameters.cluster-name >> --region us-west-2 --node-type m5.large --nodes 2 --nodes-min 2 --nodes-max 4 --managed
-            fi
+            aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE
+
             
      
             
