@@ -58,7 +58,8 @@ workflows:
         #cluster-name: my-udacity-capstone-demo
         
      - test-cluster:
-        requires: [aws-eks/create-cluster]
+        requires: [docker/publish]
+        #requires: [aws-eks/create-cluster]
         cluster-name: my-udacity-capstone-demo
      #- aws-eks/delete-cluster:
         #requires: [test-cluster]
