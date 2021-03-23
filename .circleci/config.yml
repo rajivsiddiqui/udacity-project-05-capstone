@@ -43,7 +43,7 @@ workflows:
         image: krajeevs/udacityp05_v1
         tag: latest
      - aws-eks/delete-cluster:
-        requires: [test-cluster]
+        requires: [docker/publish]
         cluster-name: my-udacity-capstone-demo
      #- aws-eks/create-cluster:
         #requires: [docker/publish]
