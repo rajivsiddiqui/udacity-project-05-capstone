@@ -55,7 +55,9 @@ jobs:
       - run:
           name: Test cluster
           command: |
-            aws cloudformation list-exports > mycf.txt
+            chmod 744 install-aws-cli.sh
+            sudo ./install-aws-cli.sh
+
             mystackcount=`aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE | grep "<< parameters.cluster-name >>" | wc -l`
             if [[ $mystackcount -gt 0 ]]
             then
