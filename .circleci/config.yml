@@ -40,13 +40,4 @@ workflows:
         requires: [docker/hadolint]
         image: krajeevs/udacityp05_v1
         tag: latest 
-      - aws-eks/create-cluster:
-          cluster-name: my-eks-demo
-      - test-cluster:
-          cluster-name: my-eks-demo
-          requires:
-            - aws-eks/create-cluster
-      - aws-eks/delete-cluster:
-          cluster-name: my-eks-demo
-          requires:
-            - test-cluster
+
