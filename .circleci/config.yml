@@ -22,6 +22,7 @@ jobs:
           Name of the EKS cluster
         type: string
     steps:
+      - checkout
       - kubernetes/install
       - aws-eks/update-kubeconfig-with-authenticator:
           cluster-name: << parameters.cluster-name >>
@@ -31,7 +32,14 @@ jobs:
             kubectl get services
             kubectl get nodes
             kubectl get pods
+            kubectl apply -f ./deployment.yaml
+            kubectl apply -f ./service.yaml
+            kubectl get deployment my-frontend
 
+            kubectl get services
+            kubectl get nodes
+            kubectl get pods
+            
 workflows:
   default:
     jobs:
@@ -45,9 +53,9 @@ workflows:
      #- aws-eks/delete-cluster:
         #requires: [docker/publish]
         #cluster-name: my-udacity-capstone-demo
-     - aws-eks/create-cluster:
-        requires: [docker/publish]
-        cluster-name: my-udacity-capstone-demo
+     #- aws-eks/create-cluster:
+        #requires: [docker/publish]
+        #cluster-name: my-udacity-capstone-demo
         
      - test-cluster:
         requires: [aws-eks/create-cluster]
