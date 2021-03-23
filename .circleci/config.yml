@@ -57,12 +57,13 @@ jobs:
           name: Test cluster
           command: |
             aws cloudformation list-exports > mycf.txt
-            mystackcount=`cat mycf.txt | grep "my-udacity-capstone-demo" | wc -l`
+            mystackcount=`aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE | grep "my-udacity-capstone-demo" | wc -l`
             if [[ $mystackcount -gt 0 ]]
             then
             echo "Exists"
             else
             echo "Not exists"
+            eksctl create cluster --name my-udacity-capstone-demo --region us-west-2 --node-type t3.small --nodes 2 --nodes-min 2 --nodes-max 4 --managed
             fi
             
      
@@ -88,8 +89,9 @@ workflows:
         requires: [docker/publish]
         #requires: [aws-eks/create-cluster]
         cluster-name: my-udacity-capstone-demo
-     #- aws-eks/delete-cluster:
+     - aws-eks/delete-cluster:
+        requires: [create-eks-cluster]
         #requires: [test-cluster]
-        #cluster-name: my-udacity-capstone-demo
+        cluster-name: my-udacity-capstone-demo
 
         
