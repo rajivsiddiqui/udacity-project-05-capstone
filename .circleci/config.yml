@@ -37,11 +37,11 @@ jobs:
             kubectl apply -f ./service.yaml
             kubectl get deployment my-frontend
             kubectl rollout restart deployment/my-frontend
-            sleep 60
+            sleep 20
             kubectl get services
             kubectl get nodes
             kubectl get pods
-            sleep 120
+            sleep 20
             
   create-eks-cluster:
     executor: aws-eks/python3
@@ -58,11 +58,15 @@ jobs:
       - run:
           name: Test cluster
           command: |
-            eksctl create cluster --name << parameters.cluster-name >> --region us-west-2 --node-type m5.large --nodes 2 --nodes-min 2 --nodes-max 4 --managed
-            aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE
-
             
-     
+            mystackcount=`aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE | grep "<< parameters.cluster-name >>" | wc -l`
+            if [[ $mystackcount -gt 0 ]]
+            then
+            echo "Cluster Found"
+            else
+            echo "Cluster Not Found"
+            eksctl create cluster --name << parameters.cluster-name >> --region us-west-2 --node-type m5.large --nodes 2 --nodes-min 2 --nodes-max 4 --managed
+            fi
             
 workflows:
   default:
