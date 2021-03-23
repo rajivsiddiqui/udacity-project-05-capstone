@@ -57,7 +57,15 @@ jobs:
           name: Test cluster
           command: |
             aws cloudformation list-exports > mycf.txt
-            cat mycf.txt
+            mystackcount=`cat mycf.txt | grep "my-udacity-capstone-demo" | wc -l`
+            if [[ $mystackcount -gt 0 ]]
+            then
+            echo "Exists"
+            else
+            echo "Not exists"
+            fi
+            
+     
             
 workflows:
   default:
