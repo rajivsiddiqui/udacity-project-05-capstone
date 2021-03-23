@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-frontend
+  labels:
+    app: my-frontend
+  namespace: default
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: my-frontend
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: my-frontend
+    spec:
+      containers:
+      - image: krajeevs/udacityp05_v1
+        imagePullPolicy: Always
+        name: my-frontend
+        ports:
+        - containerPort: 80
+          protocol: TCP
