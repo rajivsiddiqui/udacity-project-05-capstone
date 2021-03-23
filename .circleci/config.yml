@@ -2,7 +2,9 @@
 version: 2.1
 orbs:
   docker: circleci/docker@1.5.0
-
+  aws-eks: circleci/aws-eks@0.2.3
+  kubernetes: circleci/kubernetes@0.4.0
+  
 jobs:
   test:
     docker:
@@ -12,7 +14,22 @@ jobs:
       - run:
           name: Build front-end
           command: ls -lart
-            
+  test-cluster:
+    executor: aws-eks/python3
+    parameters:
+      cluster-name:
+        description: |
+          Name of the EKS cluster
+        type: string
+    steps:
+      - kubernetes/install
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: << parameters.cluster-name >>
+      - run:
+          command: |
+            kubectl get services
+          name: Test cluster
+          
 workflows:
   default:
     jobs:
@@ -23,3 +40,13 @@ workflows:
         requires: [docker/hadolint]
         image: krajeevs/udacityp05_v1
         tag: latest 
+      - aws-eks/create-cluster:
+          cluster-name: my-eks-demo
+      - test-cluster:
+          cluster-name: my-eks-demo
+          requires:
+            - aws-eks/create-cluster
+      - aws-eks/delete-cluster:
+          cluster-name: my-eks-demo
+          requires:
+            - test-cluster
