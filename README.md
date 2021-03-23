@@ -16,3 +16,5 @@ Circle CI setup :
    AWS_DEFAULT_REGION
    AWS_SECRET_ACCESS_KEY
 
+Testing :
+1. Update the index.html and this will get deployed over AWS EKS.
