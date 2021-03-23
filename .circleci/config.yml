@@ -35,7 +35,7 @@ jobs:
             kubectl apply -f ./deployment.yaml
             kubectl apply -f ./service.yaml
             kubectl get deployment my-frontend
-            kubectl rollout restart my-frontend
+            kubectl rollout restart deployment/my-frontend
 
             kubectl get services
             kubectl get nodes
