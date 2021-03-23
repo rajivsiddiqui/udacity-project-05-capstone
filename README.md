@@ -10,6 +10,7 @@ This project is a rolling deployment of Apache website via. Docker and AWS Kuber
 
 **Circle CI setup :**
 1. Setup following variables :
+   
    DOCKER_LOGIN
    
    DOCKER_PASSWORD
