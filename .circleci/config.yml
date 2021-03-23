@@ -53,12 +53,10 @@ jobs:
     steps:
       - checkout
       - kubernetes/install
-      - aws-cli/install
+      - aws-cli/setup
       - run:
           name: Test cluster
           command: |
-
-
 
             mystackcount=`aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE | grep "<< parameters.cluster-name >>" | wc -l`
             if [[ $mystackcount -gt 0 ]]
