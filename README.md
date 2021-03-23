@@ -11,10 +11,15 @@ This project is a rolling deployment of Apache website via. Docker and AWS Kuber
 **Circle CI setup :**
 1. Setup following variables :
    DOCKER_LOGIN
+   
    DOCKER_PASSWORD
+   
    AWS_ACCESS_KEY_ID
+   
    AWS_DEFAULT_REGION
+   
    AWS_SECRET_ACCESS_KEY
+   
 
 **Testing :**
 1. Update the index.html and this will get deployed over AWS EKS.
