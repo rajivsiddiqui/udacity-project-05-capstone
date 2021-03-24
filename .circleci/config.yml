@@ -82,7 +82,7 @@ workflows:
      - deploy-pods:
         requires: [create-eks-cluster]
         cluster-name: my-udacity-capstone-demo
-     - aws-eks/delete-cluster:
-        requires: [deploy-pods]
-        cluster-name: my-udacity-capstone-demo
+     #- aws-eks/delete-cluster:
+        #requires: [deploy-pods]
+        #cluster-name: my-udacity-capstone-demo
     
